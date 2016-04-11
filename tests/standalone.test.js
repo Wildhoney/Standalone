@@ -12,7 +12,7 @@ test('should be able to create a component;', t => {
 
 test.only('should be able to create a component with attributes;', t => {
 
-    const element = document.createElement('x-clock');
+    const element = document.createElement('mars-weather');
     element.setAttribute('data-timezone', 'GMT');
 
     document.body.appendChild(element);

@@ -21,7 +21,7 @@
       "babel-register",
       "./tests/helpers/setup-browser-env.js",
       "document-register-element",
-      "./example/packages/x-clock/default.js"
+      "./example/packages/mars-weather/index.js"
     ]
   },
   "keywords": [
