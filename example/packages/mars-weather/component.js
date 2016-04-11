@@ -37,8 +37,6 @@ const componentWillMount = function componentWillMount() {
  */
 const render = function render() {
 
-    console.log(this.props.unit);
-
     const { weather } = this.state;
     const unitProps = this.props.unit === 'F' ? ['minTempFahrenheit', 'maxTempFahrenheit'] : ['minTemp', 'maxTemp'];
     const temperature = (weather[unitProps[0]] + weather[unitProps[1]]) / 2;

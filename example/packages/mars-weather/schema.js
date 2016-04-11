@@ -19,7 +19,7 @@ export default {
      */
     unit: {
         type: String,
-        default: 'fahrenheit'
+        default: 'F'
     }
     
 };
