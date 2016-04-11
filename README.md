@@ -11,3 +11,5 @@
 * **npm:** `npm install react-standalone --save`
 
 ---
+
+![Standalone](media/logo.png)
