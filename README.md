@@ -1,6 +1,6 @@
 ![React Standalone](media/logo.png)
 
-> Create framework agnostic components with all the benefits of the React ecosystem &ndash; using the HTML5 [custom elements API](https://www.w3.org/TR/custom-elements/) to extend HTML's vocabulary.
+> Create framework agnostic reusable components with all the benefits of the React ecosystem &ndash; using the HTML5 [custom elements API](https://www.w3.org/TR/custom-elements/) to extend HTML's vocabulary.
 
 ![Travis](http://img.shields.io/travis/Wildhoney/Standalone.svg?style=flat-square)
 &nbsp;
@@ -14,7 +14,7 @@
 
 # Getting Started
 
-Take a look at the [`mars-weather` component](example/packages/mars-weather) for an idea on how to structure your component &ndash; however essentially a *component* consists of a `tagName` &mdash; such as `mars-weather`, the React `component` and an [optional schema](#specifying-a-schema) using [`osom`](https://github.com/Kikobeats/osom).
+Take a look at the [`mars-weather` component](example/packages/mars-weather) for an idea on how to structure your reusable component &ndash; however essentially a *component* consists of a `tagName` &mdash; such as `mars-weather`, the React `component` and an [optional schema](#specifying-a-schema) using [`osom`](https://github.com/Kikobeats/osom).
 
 ```javascript
 import { make } from 'standalone';
@@ -30,6 +30,15 @@ Once you have created your package, a custom element will be created with the su
 ```html
 <mars-weather />
 ```
+
+As the `mars-weather` component is an entirely custom element, it can be embedded in **any** JavaScript framework &mdash; Angular, Vue, React, Cycle, Ember, etc... Even vanilla JavaScript!
+
+`Standalone` makes your development life a whole lot easier:
+
+* Using HTML5 custom elements to provide true reusable and interoperable components;
+* Reap all the benefits of the React ecosystem without restricting yourself to it;
+* Transport custom element components to other JavaScript frameworks;
+* Components are framework agnostic thus switching frameworks becomes painless;
 
 ## Handling Props
 
