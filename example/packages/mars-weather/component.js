@@ -1,7 +1,15 @@
-import React, { Component, propTypes, createClass } from 'react';
+import React, { Component, PropTypes, createClass } from 'react';
 import { get } from 'axios';
 import { camelizeKeys } from 'humps';
 import moment from 'moment';
+
+/**
+ * @method propTypes
+ * @type {Object}
+ */
+const propTypes = {
+    unit: PropTypes.string.isRequired
+};
 
 /**
  * @method getInitialState
@@ -43,8 +51,8 @@ const render = function render() {
 
     return (
         <section>
-            <label>The weather on Mars is currently:</label>
             <var>{temperature || String.fromCharCode(8212)}&deg;{this.props.unit}</var>
+            <label>is the current weather on Mars</label>
 
             {weather.atmoOpacity && (
 
@@ -60,4 +68,4 @@ const render = function render() {
 
 };
 
-export default createClass({ getInitialState, getDefaultProps, componentWillMount, render });
+export default createClass({ propTypes, getInitialState, getDefaultProps, componentWillMount, render });

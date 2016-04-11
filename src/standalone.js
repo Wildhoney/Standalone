@@ -2,6 +2,7 @@ import React, { createElement } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
 import WeakMap from 'es6-weak-map';
 import { memoize } from 'ramda';
+import osom from 'osom';
 
 /**
  * @constant components
@@ -46,17 +47,22 @@ const metaDataFor = element => metaData.get(element);
  * @method renderComponent
  * @param {Function} Component
  * @param {HTMLElement} element
+ * @param {Object} [schema]
  * @return {void}
  */
-const renderComponent = (Component, element) => {
+const renderComponent = (Component, element, schema) => {
 
-    const attributes = Object.keys(element.attributes).reduce((accumulator, key) => {
+    const validator = schema ? osom(schema) : x => x;
+
+    const attributes = validator(Object.keys(element.attributes).reduce((accumulator, key) => {
 
         // Reduce the NodeList into a standard object for passing into the React component.
         const attribute = element.attributes[key];
         return { ...accumulator, [removePrefix(attribute.nodeName)]: attribute.nodeValue };
 
-    }, {});
+    }, {}));
+
+    console.log(attributes);
 
     render(<Component {...attributes} />, element);
 
@@ -89,7 +95,8 @@ prototype.attributeChangedCallback = function attributeChangedCallback(attr, _, 
 
         // Re-render element only if it's currently mounted.
         const tag = tagName(this.nodeName);
-        renderComponent(components[tag], this);
+        const { component, schema } = components[tag];
+        renderComponent(component, this, schema);
 
     }
 
@@ -107,7 +114,8 @@ prototype.attachedCallback = function attachedCallback() {
     // Element has been attached to the DOM, so we'll update the meta data, and
     // then render the element into the custom element container.
     metaData.set(this, { ...meta, isMounted: true });
-    renderComponent(components[tag], this);
+    const { component, schema } = components[tag];
+    renderComponent(component, this, schema);
 
 };
 
@@ -134,10 +142,10 @@ prototype.detachedCallback = function detachedCallback() {
  * @param {Object} component
  * @return {Object}
  */
-export const make = ({ tag, schema, component }) => {
+export const make = (tag, { schema, component }) => {
 
     document.registerElement(tagName(tag), { prototype });
-    components[tagName(tag)] = component;
+    components[tagName(tag)] = { component, schema };
     return component;
 
 };

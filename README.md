@@ -14,7 +14,7 @@
 
 # Getting Started
 
-Take a look at the [`mars-weather` component](example/packages/mars-weather) for an idea on how to structure your component &ndash; however essentially a *component* consists of a `tagName` &mdash; such as `mars-weather`, the React `component`, and an optional schema using [`osom`](https://github.com/Kikobeats/osom).
+Take a look at the [`mars-weather` component](example/packages/mars-weather) for an idea on how to structure your component &ndash; however essentially a *component* consists of a `tagName` &mdash; such as `mars-weather`, the React `component` and an [optional schema](#specifying-a-schema) using [`osom`](https://github.com/Kikobeats/osom).
 
 ```javascript
 import { make } from 'standalone';
@@ -38,7 +38,7 @@ By specifying attributes on the custom element, the values of the attributes are
 In the `mars-weather` example, we have setup the `getDefaultProps` method to return the default props, however users can override the `unit` prop by passing in a [`data` attribute](http://html5doctor.com/html5-custom-data-attributes/) named `data-unit`.
 
 ```html
-<mars-weather unit="C" />
+<mars-weather data-unit="C" />
 ```
 
 In the above case, the `data-unit` attribute will be transformed to `unit` &mdash; as `Standalone` strips away any `data-` prefixes &mdash; and then re-renders your component, allowing you to access the attribute as `this.props.unit`.
