@@ -62,8 +62,6 @@ const renderComponent = (Component, element, schema) => {
 
     }, {}));
 
-    console.log(attributes);
-
     render(<Component {...attributes} />, element);
 
 };

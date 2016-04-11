@@ -162,8 +162,6 @@
 	    return _extends({}, accumulator, _defineProperty({}, removePrefix(attribute.nodeName), attribute.nodeValue));
 	  }, {}));
 
-	  console.log(attributes);
-
 	  (0, _reactDom.render)(_react2.default.createElement(Component, attributes), element);
 	};
 

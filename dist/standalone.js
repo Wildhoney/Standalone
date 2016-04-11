@@ -168,8 +168,9 @@ module.exports =
 
 	    // Re-render element only if it's currently mounted.
 	    var tag = tagName(this.nodeName);
-	    var component = components.component;
-	    var schema = components.schema;
+	    var _components$tag = components[tag];
+	    var component = _components$tag.component;
+	    var schema = _components$tag.schema;
 
 	    renderComponent(component, this, schema);
 	  }
@@ -187,9 +188,9 @@ module.exports =
 	  // Element has been attached to the DOM, so we'll update the meta data, and
 	  // then render the element into the custom element container.
 	  metaData.set(this, _extends({}, meta, { isMounted: true }));
-	  var _components$tag = components[tag];
-	  var component = _components$tag.component;
-	  var schema = _components$tag.schema;
+	  var _components$tag2 = components[tag];
+	  var component = _components$tag2.component;
+	  var schema = _components$tag2.schema;
 
 	  renderComponent(component, this, schema);
 	};
