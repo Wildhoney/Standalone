@@ -1,4 +1,4 @@
-import { createElement } from 'react';
+import React, { createElement } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
 import WeakMap from 'es6-weak-map';
 import { memoize } from 'ramda';
@@ -36,13 +36,39 @@ const removePrefix = memoize(attr => attr.replace('data-', ''));
 const tagName = memoize(nodeName => nodeName.toLowerCase());
 
 /**
+ * @method metaDataFor
+ * @param {HTMLElement} element
+ * @return {Object}
+ */
+const metaDataFor = element => metaData.get(element);
+
+/**
+ * @method renderComponent
+ * @param {Function} Component
+ * @param {HTMLElement} element
+ * @return {void}
+ */
+const renderComponent = (Component, element) => {
+
+    const attributes = Object.keys(element.attributes).reduce((accumulator, key) => {
+
+        // Reduce the NodeList into a standard object for passing into the React component.
+        const attribute = element.attributes[key];
+        return { ...accumulator, [removePrefix(attribute.nodeName)]: attribute.nodeValue };
+
+    }, {});
+
+    render(<Component {...attributes} />, element);
+
+};
+
+/**
  * @method createdCallback
  * @return {void}
  */
 prototype.createdCallback = function createdCallback() {
-    
+
     metaData.set(this, {
-        attributes: {},
         isMounted: false
     });
     
@@ -51,26 +77,22 @@ prototype.createdCallback = function createdCallback() {
 /**
  * @method attributeChangedCallback
  * @param {String} attr
- * @param {String} oldValue
+ * @param {String} _
  * @param {String} value
  * @return {void}
  */
-prototype.attributeChangedCallback = function attributeChangedCallback(attr, oldValue, value) {
-    
-    const meta = metaData.get(this);
-    
-    metaData.set(this, {
-        isMounted: meta.isMounted,
-        attributes: {
-            ...meta.attributes,
-            [removePrefix(attr)]: value
-        }
-    });
+prototype.attributeChangedCallback = function attributeChangedCallback(attr, _, value) {
 
-    // Re-render element only if it's currently mounted.
-    const tag = tagName(this.nodeName);
-    meta.isMounted && render(components[tag], this);
-    
+    const meta = metaDataFor(this);
+
+    if (meta.isMounted) {
+
+        // Re-render element only if it's currently mounted.
+        const tag = tagName(this.nodeName);
+        renderComponent(components[tag], this);
+
+    }
+
 };
 
 /**
@@ -80,15 +102,12 @@ prototype.attributeChangedCallback = function attributeChangedCallback(attr, old
 prototype.attachedCallback = function attachedCallback() {
 
     const tag = tagName(this.nodeName);
-    const element = components[tag];
-    const meta = metaData.get(this);
+    const meta = metaDataFor(this);
 
-    metaData.set(this, {
-        isMounted: true,
-        attributes: meta.attributes
-    });
-
-    render(element, this);
+    // Element has been attached to the DOM, so we'll update the meta data, and
+    // then render the element into the custom element container.
+    metaData.set(this, { ...meta, isMounted: true });
+    renderComponent(components[tag], this);
 
 };
 
@@ -98,13 +117,12 @@ prototype.attachedCallback = function attachedCallback() {
  */
 prototype.detachedCallback = function detachedCallback() {
 
-    const meta = metaData.get(this);
-
     metaData.set(this, {
-        isMounted: false,
-        attributes: meta.attributes
+        isMounted: false
     });
 
+    // Instruct the component to unmount, which will invoke the `componentWillUnmount` lifecycle
+    // function for handling any cleaning up of the component.
     unmountComponentAtNode(this);
 
 };
@@ -119,7 +137,7 @@ prototype.detachedCallback = function detachedCallback() {
 export const make = ({ tag, schema, component }) => {
 
     document.registerElement(tagName(tag), { prototype });
-    components[tagName(tag)] = createElement(component);
+    components[tagName(tag)] = component;
     return component;
 
 };

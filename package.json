@@ -4,7 +4,8 @@
   "description": "Create framework agnostic components with all the benefits and love of the React ecosystem – using the HTML5 custom elements API to extend HTML's vocabulary.",
   "main": "dist/standalone.js",
   "scripts": {
-    "test": "ava tests/*.test.js --tap | tap-nyan"
+    "test": "ava tests/*.test.js --tap | tap-nyan",
+    "dev": "browserify example/packages/mars-weather/index.js -o example/build.js -t [ babelify --presets [ es2015 react stage-0 ] ]"
   },
   "repository": {
     "type": "git",
@@ -50,8 +51,12 @@
     "babel-preset-react": "^6.5.0",
     "babel-preset-stage-0": "^6.5.0",
     "babel-register": "^6.7.2",
+    "babelify": "^7.2.0",
+    "browserify": "^13.0.0",
     "document-register-element": "^0.5.4",
     "es6-weak-map": "^2.0.1",
+    "express": "^4.13.4",
+    "humps": "^1.0.0",
     "jsdom": "^8.3.1",
     "moment": "^2.12.0",
     "tap-nyan": "0.0.2"
