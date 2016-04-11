@@ -1,4 +1,4 @@
-# React Standalone
+![React Standalone](media/logo.png)
 
 > Create framework agnostic components with all the benefits of the React ecosystem &ndash; using the HTML5 [custom elements API](https://www.w3.org/TR/custom-elements/).
 
@@ -11,5 +11,3 @@
 * **npm:** `npm install react-standalone --save`
 
 ---
-
-![Standalone](media/logo.png)
