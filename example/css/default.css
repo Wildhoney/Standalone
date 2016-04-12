@@ -38,6 +38,19 @@
     color: saddlebrown;
 }
 
+:root > body > section {
+    margin: 1vmax;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    height: 30vmax;
+    width: 30vmax;
+    border-radius: 3px;
+    background-color: rgba(0, 0, 0, .1);
+    font-size: 1.3vmax;
+}
+
 :root > body > mars-weather {
     margin: 1vmax;
     display: block;
