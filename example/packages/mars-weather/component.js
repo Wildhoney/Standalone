@@ -1,4 +1,5 @@
 import React, { Component, PropTypes, createClass } from 'react';
+import { findDOMNode } from 'react-dom';
 import { get } from 'axios';
 import { camelizeKeys } from 'humps';
 import moment from 'moment';
@@ -49,8 +50,37 @@ const render = function render() {
     const unitProps = this.props.unit === 'F' ? ['minTempFahrenheit', 'maxTempFahrenheit'] : ['minTemp', 'maxTemp'];
     const temperature = (weather[unitProps[0]] + weather[unitProps[1]]) / 2;
 
+    /**
+     * @method sendChangeEvent
+     * @param {String} unit
+     * @return {void}
+     */
+    const sendChangeEvent = unit => {
+
+        findDOMNode(this).dispatchEvent(new CustomEvent('unitChanged', {
+            bubbles: true,
+            detail: { unit }
+        }));
+
+    };
+
     return (
         <section>
+
+            <ul className="units">
+                <li>Temperature:</li>
+                <li>
+                    <a onClick={() => sendChangeEvent('C')}>
+                        Celsius
+                    </a>
+                </li>
+                <li>
+                    <a onClick={() => sendChangeEvent('F')}>
+                        Fahrenheit
+                    </a>
+                </li>
+            </ul>
+
             <var>{temperature ? Number(temperature).toFixed(1) : String.fromCharCode(8212)}&deg;{this.props.unit}</var>
             <label>is the current weather on Mars</label>
 
@@ -63,6 +93,7 @@ const render = function render() {
                 </ul>
 
             )}
+            
         </section>
     );
 

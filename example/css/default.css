@@ -67,7 +67,7 @@
 :root > body > mars-weather > section {
     display: flex;
     height: 100%;
-    justify-content: flex-end;
+    justify-content: flex-start;
     align-items: center;
     flex-direction: column;
     color: white;
@@ -88,13 +88,40 @@
     font-style: normal;
 }
 
-:root > body > mars-weather > section > ul {
+:root > body > mars-weather > section > ul.other,
+:root > body > mars-weather > section > ul.units {
     list-style-type: none;
 }
 
-:root > body > mars-weather > section > ul > li {
+:root > body > mars-weather > section > ul.other {
+    padding-top: 1vmax;
+}
+
+:root > body > mars-weather > section > ul.other > li {
     color: white;
     font-weight: 100;
     padding: 0.25vmax 0;
     font-size: 1.1vmax;
+}
+
+:root > body > mars-weather > section > ul.units {
+    display: flex;
+    height: 5vmax;
+}
+
+:root > body > mars-weather > section > ul.units > li {
+    padding: 0 .35vmax;
+    color: black;
+    text-shadow: none;
+    font-size: 1vmax;
+}
+
+:root > body > mars-weather > section > ul.units > li > a {
+    color: rgba(0, 0, 0, .75);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+:root > body > mars-weather > section > ul.units > li > a:hover {
+    color: black;
 }
