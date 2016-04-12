@@ -1,8 +1,9 @@
 import React, { createElement } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
 import WeakMap from 'es6-weak-map';
-import { memoize } from 'ramda';
+import { memoize, compose } from 'ramda';
 import osom from 'osom';
+import { camelize } from 'humps';
 
 /**
  * @constant components
@@ -53,12 +54,13 @@ const metaDataFor = element => metaData.get(element);
 const renderComponent = (Component, element, schema) => {
 
     const validator = schema ? osom(schema) : x => x;
+    const parseNodeName = compose(camelize, removePrefix);
 
     const attributes = validator(Object.keys(element.attributes).reduce((accumulator, key) => {
 
         // Reduce the NodeList into a standard object for passing into the React component.
         const attribute = element.attributes[key];
-        return { ...accumulator, [removePrefix(attribute.nodeName)]: attribute.nodeValue };
+        return { ...accumulator, [parseNodeName(attribute.nodeName)]: attribute.nodeValue };
 
     }, {}));
 

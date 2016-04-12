@@ -60,4 +60,8 @@ export default {
 
 Once you have configured the schema to use for your component, you can happily setup the usual [React `propTypes`](https://facebook.github.io/react/docs/reusable-components.html) specifying the data type you're expecting to be passed through.
 
+## Component Events
+
+Coming soon...
+
 [![forthebadge](http://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com)

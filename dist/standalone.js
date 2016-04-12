@@ -70,6 +70,8 @@ module.exports =
 
 	var _osom2 = _interopRequireDefault(_osom);
 
+	var _humps = __webpack_require__(237);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -131,12 +133,13 @@ module.exports =
 	  var validator = schema ? (0, _osom2.default)(schema) : function (x) {
 	    return x;
 	  };
+	  var parseNodeName = (0, _ramda.compose)(_humps.camelize, removePrefix);
 
 	  var attributes = validator(Object.keys(element.attributes).reduce(function (accumulator, key) {
 
 	    // Reduce the NodeList into a standard object for passing into the React component.
 	    var attribute = element.attributes[key];
-	    return _extends({}, accumulator, _defineProperty({}, removePrefix(attribute.nodeName), attribute.nodeValue));
+	    return _extends({}, accumulator, _defineProperty({}, parseNodeName(attribute.nodeName), attribute.nodeValue));
 	  }, {}));
 
 	  (0, _reactDom.render)(_react2.default.createElement(Component, attributes), element);
@@ -35978,6 +35981,135 @@ module.exports =
 	fn.types = ['arguments', 'array', 'arraybuffer', 'boolean', 'date', 'error', 'float32array', 'float64array', 'function', 'generatorfunction', 'int16array', 'int32array', 'int8array', 'map', 'number', 'object', 'regexp', 'set', 'string', 'symbol', 'uint16array', 'uint32array', 'uint8array', 'uint8clampedarray', 'weakmap', 'weakset'];
 
 	module.exports = fn;
+
+/***/ },
+/* 237 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;'use strict';
+
+	// =========
+	// = humps =
+	// =========
+	// version 0.7.0
+	// Underscore-to-camelCase converter (and vice versa)
+	// for strings and object keys
+
+	// humps is copyright © 2012+ Dom Christie
+	// Released under the MIT license.
+
+	;(function (global) {
+
+	  var _processKeys = function _processKeys(convert, obj, options) {
+	    if (!_isObject(obj) || _isDate(obj) || _isRegExp(obj) || _isBoolean(obj)) {
+	      return obj;
+	    }
+
+	    var output,
+	        i = 0,
+	        l = 0;
+
+	    if (_isArray(obj)) {
+	      output = [];
+	      for (l = obj.length; i < l; i++) {
+	        output.push(_processKeys(convert, obj[i], options));
+	      }
+	    } else {
+	      output = {};
+	      for (var key in obj) {
+	        if (obj.hasOwnProperty(key)) {
+	          output[convert(key, options)] = _processKeys(convert, obj[key], options);
+	        }
+	      }
+	    }
+	    return output;
+	  };
+
+	  // String conversion methods
+
+	  var separateWords = function separateWords(string, options) {
+	    options = options || {};
+	    var separator = options.separator || '_';
+	    var split = options.split || /(?=[A-Z])/;
+
+	    return string.split(split).join(separator);
+	  };
+
+	  var camelize = function camelize(string) {
+	    if (_isNumerical(string)) {
+	      return string;
+	    }
+	    string = string.replace(/[\-_\s]+(.)?/g, function (match, chr) {
+	      return chr ? chr.toUpperCase() : '';
+	    });
+	    // Ensure 1st char is always lowercase
+	    return string.substr(0, 1).toLowerCase() + string.substr(1);
+	  };
+
+	  var pascalize = function pascalize(string) {
+	    var camelized = camelize(string);
+	    // Ensure 1st char is always uppercase
+	    return camelized.substr(0, 1).toUpperCase() + camelized.substr(1);
+	  };
+
+	  var decamelize = function decamelize(string, options) {
+	    return separateWords(string, options).toLowerCase();
+	  };
+
+	  // Utilities
+	  // Taken from Underscore.js
+
+	  var toString = Object.prototype.toString;
+
+	  var _isObject = function _isObject(obj) {
+	    return obj === Object(obj);
+	  };
+	  var _isArray = function _isArray(obj) {
+	    return toString.call(obj) == '[object Array]';
+	  };
+	  var _isDate = function _isDate(obj) {
+	    return toString.call(obj) == '[object Date]';
+	  };
+	  var _isRegExp = function _isRegExp(obj) {
+	    return toString.call(obj) == '[object RegExp]';
+	  };
+	  var _isBoolean = function _isBoolean(obj) {
+	    return toString.call(obj) == '[object Boolean]';
+	  };
+
+	  // Performant way to determine if obj coerces to a number
+	  var _isNumerical = function _isNumerical(obj) {
+	    obj = obj - 0;
+	    return obj === obj;
+	  };
+
+	  var humps = {
+	    camelize: camelize,
+	    decamelize: decamelize,
+	    pascalize: pascalize,
+	    depascalize: decamelize,
+	    camelizeKeys: function camelizeKeys(object) {
+	      return _processKeys(camelize, object);
+	    },
+	    decamelizeKeys: function decamelizeKeys(object, options) {
+	      return _processKeys(decamelize, object, options);
+	    },
+	    pascalizeKeys: function pascalizeKeys(object) {
+	      return _processKeys(pascalize, object);
+	    },
+	    depascalizeKeys: function depascalizeKeys() {
+	      return this.decamelizeKeys.apply(this, arguments);
+	    }
+	  };
+
+	  if (true) {
+	    !(__WEBPACK_AMD_DEFINE_FACTORY__ = (humps), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	  } else if (typeof module !== 'undefined' && module.exports) {
+	    module.exports = humps;
+	  } else {
+	    global.humps = humps;
+	  }
+	})(undefined);
 
 /***/ }
 /******/ ]);
