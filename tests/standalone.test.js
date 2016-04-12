@@ -1,23 +1,28 @@
 import test from 'ava';
+import waitFor from './helpers/wait-for-element.js';
 
 test('should be able to create a component;', t => {
 
-    const node = document.createElement('x-clock');
-    const element = document.body.appendChild(node);
+    const element = document.createElement('mars-weather');
+    document.body.appendChild(element);
 
-    t.true(element.constructor === window.HTMLElement);
-    t.is(element.querySelectorAll('div').length, 1);
+    return waitFor(element).then(() => {
+        t.true(element.constructor === window.HTMLElement);
+        t.is(element.querySelectorAll('var').length, 1);
+    });
 
 });
 
-test.only('should be able to create a component with attributes;', t => {
+test('should be able to create a component with attributes;', t => {
 
     const element = document.createElement('mars-weather');
     element.setAttribute('data-unit', 'C');
     document.body.appendChild(element);
 
-    t.true(element.constructor === window.HTMLElement);
-    console.log(element.outerHTML);
-    // t.is(element.querySelectorAll('section').length, 1);
+    return waitFor(element).then(() => {
+        t.true(element.constructor === window.HTMLElement);
+        t.is(element.getAttribute('data-unit'), 'C');
+        t.is(element.querySelectorAll('var').length, 1);
+    });
 
 });

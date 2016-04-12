@@ -75,7 +75,7 @@ prototype.createdCallback = function createdCallback() {
     metaData.set(this, {
         isMounted: false
     });
-    
+
 };
 
 /**
