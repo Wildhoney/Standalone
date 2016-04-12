@@ -51,7 +51,7 @@ const render = function render() {
 
     return (
         <section>
-            <var>{temperature || String.fromCharCode(8212)}&deg;{this.props.unit}</var>
+            <var>{temperature ? Number(temperature).toFixed(1) : String.fromCharCode(8212)}&deg;{this.props.unit}</var>
             <label>is the current weather on Mars</label>
 
             {weather.atmoOpacity && (
