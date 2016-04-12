@@ -33,13 +33,6 @@ Once you have created your package, a custom element will be created with the su
 
 As the `mars-weather` component is an entirely custom element, it can be embedded in **any** JavaScript framework &mdash; Angular, Vue, React, Cycle, Ember, etc... Even vanilla JavaScript!
 
-`Standalone` makes your development life a whole lot easier:
-
-* Using HTML5 custom elements to provide true reusable and interoperable components;
-* Reap all the benefits of the React ecosystem without restricting yourself to it;
-* Transport custom element components to other JavaScript frameworks;
-* Components are framework agnostic thus switching frameworks becomes painless;
-
 ## Handling Props
 
 By specifying attributes on the custom element, the values of the attributes are passed into your component as props &ndash; any changes to the `state` will be handled internally to your component, whereas any changes to your element's attributes will cause a re-render with the updated `props`.
