@@ -21,7 +21,16 @@
             document.querySelector('mars-weather').setAttribute('data-unit', unit || 'C');
         }
 
-        document.addEventListener('DOMContentLoaded', changeUnit.bind(null, 'C'));
+        // Set the initial property.
+        document.addEventListener('DOMContentLoaded', function() {
+
+            var node = document.querySelector('mars-weather');
+
+            node.addEventListener('unitChanged', function(event) {
+                node.setAttribute('data-unit', event.detail.unit);
+            });
+
+        });
 
     </script>
 
