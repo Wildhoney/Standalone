@@ -20,10 +20,6 @@ export default {
     unit: {
         type: String,
         default: 'F'
-    },
-
-    moreData: {
-        type: JSON.parse
     }
     
 };

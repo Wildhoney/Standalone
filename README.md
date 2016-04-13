@@ -12,7 +12,15 @@
 
 ---
 
-# Getting Started
+## Table of Contents
+
+* [Getting Started](#getting-started)
+* [Handling Props](#handling-props)
+    * [Specifying a Schema](#specifying-a-schema)
+* [Component Events](#component-events)
+    * [Passing JSON Structure](#passing-json-structure)
+
+## Getting Started
 
 Take a look at the [`mars-weather` component](example/packages/mars-weather) for an idea on how to structure your reusable component &ndash; however essentially a *component* consists of a `tagName` &mdash; such as `mars-weather`, the React `component` and an [optional schema](#specifying-a-schema) using [`osom`](https://github.com/Kikobeats/osom).
 
@@ -92,5 +100,21 @@ node.addEventListener('migrate-planets', event => {
 
 });
 ```
+
+### Passing JSON Structure
+
+As invoking `setAttribute` on your component causes React to re-render your component, it may be useful to supply a JSON payload to your component instead &mdash; especially if you're defining a multitude of attributes &mdash; which also helps with performance as you would only need one `setAttribute` to upload many props and re-render.
+
+By defining a schema you can specify an attribute that will be parsed as JSON.
+
+```javascript
+export default {
+    payload: {
+        type: JSON.parse
+    }
+}
+```
+
+Attaching a JSON string to your element's `data-payload` attribute will cause it to be parsed into an object using `JSON.parse`, and passed to your React component as `this.props.payload`.
 
 [![forthebadge](http://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com)
