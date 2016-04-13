@@ -6,7 +6,7 @@
 &nbsp;
 ![npm](http://img.shields.io/npm/v/react-standalone.svg?style=flat-square)
 &nbsp;
-![License MIT](http://img.shields.io/badge/License-MIT-lightgrey.svg?style=flat-square)
+![License MIT](http://img.shields.io/badge/license-mit-lightgrey.svg?style=flat-square)
 
 * **npm:** `npm install react-standalone --save`
 
@@ -103,7 +103,7 @@ node.addEventListener('migrate-planets', event => {
 
 ### Passing JSON Structure
 
-As invoking `setAttribute` on your component causes React to re-render your component, it may be useful to supply a JSON payload to your component instead &mdash; especially if you're defining a multitude of attributes &mdash; which also helps with performance as you would only need one `setAttribute` to upload many props and re-render.
+As invoking `setAttribute` on your component causes React to re-render your component, it may be useful to supply a JSON payload to your component instead &mdash; especially if you're defining a multitude of attributes; this also helps with performance as you would only need one `setAttribute` to update many props and re-render.
 
 By defining a schema you can specify an attribute that will be parsed as JSON.
 
