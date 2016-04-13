@@ -62,6 +62,33 @@ Once you have configured the schema to use for your component, you can happily s
 
 ## Component Events
 
-Coming soon...
+Using [Custom Events](https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Creating_and_triggering_events) you can easily set-up a communication channel between your components and the outside world.
+
+```javascript
+const event = new CustomEvent('migratePlanets', {
+    bubbles: true,
+    detail: { planet: 'Saturn' }
+});
+
+// ...
+
+findDOMNode(this).dispatchEvent(event);
+```
+
+**Note:** It's important that you modify the `CustomEvent` function to `bubbles: true` as otherwise the event would simply halt at the `findDOMNode(this)` node rather than bubbling up to the `mars-weather` node &mdash; unless you `dispatchEvent` on `mars-weather` using `parentNode`.
+
+Within your component you would `dispatchEvent` with `bubbles: true` on the `findDOMNode(this)` node, and then `addEventListener` for your component &mdash; such as `mars-weather` &mdash; from the outside.
+
+```javascript
+const node = document.querySelector('mars-weather');
+
+node.addEventListener(event => {
+
+    // Update the `data-planet` attribute to reflect the newly migrated planet
+    // which will cause the component to re-render with the update prop.
+    node.setAttribute('data-planet', event.detail.planet);
+
+});
+```
 
 [![forthebadge](http://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com)
