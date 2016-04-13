@@ -65,24 +65,26 @@ Once you have configured the schema to use for your component, you can happily s
 Using [Custom Events](https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Creating_and_triggering_events) you can easily set-up a communication channel between your components and the outside world.
 
 ```javascript
-const event = new CustomEvent('migratePlanets', {
+// Instantiate `CustomEvent` and then specify the name of the event, followed
+// by the payload which will be passed to your listener function.
+const event = new CustomEvent('migrate-planets', {
     bubbles: true,
-    detail: { planet: 'Saturn' }
+    detail: {
+        planet: 'Saturn'
+    }
 });
-
-// ...
 
 findDOMNode(this).dispatchEvent(event);
 ```
 
-**Note:** It's important that you modify the `CustomEvent` function to `bubbles: true` as otherwise the event would simply halt at the `findDOMNode(this)` node rather than bubbling up to the `mars-weather` node &mdash; unless you `dispatchEvent` on `mars-weather` using `parentNode`.
+It's crucial that you emit the event as `bubbles: true` otherwise the event would simply halt at the `findDOMNode(this)` node rather than bubbling up to the `mars-weather` node &mdash; unless you dispatch the event on the `mars-weather` node by using `findDOMNode(this).parentNode`.
 
-Within your component you would `dispatchEvent` with `bubbles: true` on the `findDOMNode(this)` node, and then `addEventListener` for your component &mdash; such as `mars-weather` &mdash; from the outside.
+Within your component you emit the event &mdash; `CustomEvent` &mdash; using `dispatchEvent` and then bind your custom element &mdash; such as `mars-weather` &mdash; using `addEventListener` from the outside.
 
 ```javascript
 const node = document.querySelector('mars-weather');
 
-node.addEventListener(event => {
+node.addEventListener('migrate-planets', event => {
 
     // Update the `data-planet` attribute to reflect the newly migrated planet
     // which will cause the component to re-render with the update prop.
