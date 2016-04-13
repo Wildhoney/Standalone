@@ -10,8 +10,6 @@
 
 * **npm:** `npm install react-standalone --save`
 
----
-
 ## Table of Contents
 
 * [Getting Started](#getting-started)
@@ -19,6 +17,8 @@
     * [Specifying a Schema](#specifying-a-schema)
 * [Component Events](#component-events)
     * [Passing JSON Structure](#passing-json-structure)
+    
+---
 
 ## Getting Started
 
@@ -115,6 +115,6 @@ export default {
 }
 ```
 
-Attaching a JSON string to your element's `data-payload` attribute will cause it to be parsed into an object using `JSON.parse`, and passed to your React component as `this.props.payload`.
+Attaching a JSON string to your element's `data-payload` attribute will cause it to be parsed into an object using `JSON.parse`, and passed to your React component as `this.props.payload` which can be defined in the `propTypes` using `PropTypes.shape`.
 
 [![forthebadge](http://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com)
