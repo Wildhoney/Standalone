@@ -39,7 +39,9 @@ Once you have created your package, a custom element will be created with the su
 <mars-weather />
 ```
 
-As the `mars-weather` component is an entirely custom element, it can be embedded in **any** JavaScript framework &mdash; Angular, Vue, React, Cycle, Ember, etc... Even vanilla JavaScript!
+As the `mars-weather` component is an entirely custom element, it can be embedded in **any** JavaScript framework &mdash; Angular, Vue, React, Cycle, Ember, [Vanilla](http://vanilla-js.com/), etc...
+
+**Bonus:** Use [Keo with shadow boundaries](https://github.com/Wildhoney/Keo/blob/master/docs/SHADOW_DOM.md) for a true [Polymer-esque](https://www.polymer-project.org/1.0/) feel.
 
 ## Handling Props
 
