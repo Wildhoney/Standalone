@@ -6,7 +6,8 @@
   "scripts": {
     "build": "webpack && npm run dev",
     "test": "ava tests/*.test.js --tap | tap-nyan",
-    "dev": "webpack --config webpack-dev.config.js"
+    "dev": "webpack --config webpack-dev.config.js",
+    "cleanup": "rimraf node_modules"
   },
   "repository": {
     "type": "git",
