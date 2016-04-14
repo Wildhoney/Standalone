@@ -54,6 +54,7 @@
     "babel-preset-react": "^6.5.0",
     "babel-preset-stage-0": "^6.5.0",
     "babel-register": "^6.7.2",
+    "bower": "^1.7.9",
     "document-register-element": "^0.5.4",
     "express": "^4.13.4",
     "humps": "^1.0.0",
