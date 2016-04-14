@@ -1,9 +1,10 @@
 # os
 .DS_Store
 
-# npm / node
+# npm / node / bower
 node_modules
 npm-debug.log
+example/vendor
 
 # ide
 .idea

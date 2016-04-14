@@ -6,7 +6,9 @@ node_js:
   - 5.10
 
 before_deploy:
+  - bower i
   - npm run build
+  - npm run cleanup
 
 sudo: false
 

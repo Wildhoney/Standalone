@@ -1,0 +1,45 @@
+{
+  "name": "react-standalone",
+  "version": "0.1.4",
+  "description": "Create framework agnostic components that are truly reusable and interoperable with all the benefits of the React ecosystem – using the HTML5 custom elements API to extend HTML's vocabulary.",
+  "main": "dist/standalone.js",
+  "authors": [
+    "Adam Timberlake <adam.timberlake@gmail.com>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "react",
+    "standalone",
+    "webcomponents",
+    "web",
+    "components",
+    "custom",
+    "element",
+    "custom",
+    "elements",
+    "custom",
+    "html5",
+    "register",
+    "element",
+    "custom",
+    "element",
+    "api",
+    "component",
+    "components"
+  ],
+  "homepage": "https://github.com/Wildhoney/Standalone",
+  "moduleType": [
+    "amd",
+    "es6"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "webcomponentsjs": "webcomponents.js#^0.7.21"
+  }
+}
