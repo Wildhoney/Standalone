@@ -38,6 +38,15 @@ const removePrefix = memoize(attr => attr.replace('data-', ''));
 const tagName = memoize(nodeName => nodeName.toLowerCase());
 
 /**
+ * @method throwError
+ * @param {String} message
+ * @return {void}
+ */
+const throwError = message => {
+    throw `Standalone: ${message}.`;
+};
+
+/**
  * @method metaDataFor
  * @param {HTMLElement} element
  * @return {Object}
@@ -140,12 +149,17 @@ prototype.detachedCallback = function detachedCallback() {
  * @param {String} tag
  * @param {Object} schema
  * @param {Object} component
- * @return {Object}
+ * @return {Object|void}
  */
 export const make = (tag, { schema, component }) => {
 
-    document.registerElement(tagName(tag), { prototype });
-    components[tagName(tag)] = { component, schema };
+    try {
+        document.registerElement(tagName(tag), { prototype });
+        components[tagName(tag)] = { component, schema };
+    } catch (e) {
+        return void throwError(e.message);
+    }
+
     return component;
 
 };
