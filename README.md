@@ -124,7 +124,10 @@ Attaching a JSON string to your element's `data-payload` attribute will cause it
 
 * Chrome >= v33
 * Opera >= v20
+* *IE >= 11
+* *Safari >= 7
+* *Firefox
 
-__Based on [caniuse.com/#feat=custom-elements](http://caniuse.com/#feat=custom-elements)__
+_\* Requires the excellent [webcomponents-lite.js](https://github.com/WebComponents/webcomponentsjs) polyfill (13K gzipped)_
 
 [![forthebadge](http://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com)
