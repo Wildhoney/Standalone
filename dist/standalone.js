@@ -143,8 +143,19 @@ module.exports =
 	    return x;
 	  };
 	  var parseNodeName = (0, _ramda.compose)(_humps.camelize, removePrefix);
+	  var keys = Object.keys(element.attributes);
 
-	  var attributes = validator(Object.keys(element.attributes).reduce(function (accumulator, key) {
+	  /**
+	   * @method dataAttributes
+	   * @param {String} key
+	   * @return {Boolean}
+	   */
+	  var dataAttributes = function dataAttributes(key) {
+	    return (/data-/.test(element.attributes[key].nodeName)
+	    );
+	  };
+
+	  var attributes = validator(keys.filter(dataAttributes).reduce(function (accumulator, key) {
 
 	    // Reduce the NodeList into a standard object for passing into the React component.
 	    var attribute = element.attributes[key];
