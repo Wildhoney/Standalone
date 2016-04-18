@@ -23,7 +23,7 @@
 
 ## Getting Started
 
-Take a look at the [`mars-weather` component](example/packages/mars-weather) for an idea on how to structure your reusable component &ndash; however essentially a *component* consists of a `tagName` &mdash; such as `mars-weather`, the React `component` and an [optional schema](#specifying-a-schema) using [`osom`](https://github.com/Kikobeats/osom).
+Take a look at the [`mars-weather` component](example/packages/mars-weather) for an idea on how to structure your reusable component &ndash; however essentially a *component* consists of a tag name &mdash; such as `mars-weather`, the React `component` and an [optional schema](#specifying-a-schema) using [`osom`](https://github.com/Kikobeats/osom).
 
 ```javascript
 import { make } from 'standalone';
