@@ -1,7 +1,7 @@
 import React, { createElement } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
 import WeakMap from 'es6-weak-map';
-import { memoize, compose } from 'ramda';
+import { memoize, compose, curry } from 'ramda';
 import osom from 'osom';
 import { camelize } from 'humps';
 
@@ -68,14 +68,15 @@ const renderComponent = (Component, element, schema) => {
 
     /**
      * @method dataAttributes
+     * @param {Object} attributes
      * @param {String} key
      * @return {Boolean}
      */
-    const dataAttributes = key => {
-        return /data-/.test(element.attributes[key].nodeName);
-    };
+    const dataAttributes = curry((attributes, key) => {
+        return /data-/.test(attributes[key].nodeName);
+    });
 
-    const attributes = validator(keys.filter(dataAttributes).reduce((accumulator, key) => {
+    const attributes = validator(keys.filter(dataAttributes(element.attributes)).reduce((accumulator, key) => {
 
         // Reduce the NodeList into a standard object for passing into the React component.
         const attribute = element.attributes[key];
@@ -101,12 +102,9 @@ prototype.createdCallback = function createdCallback() {
 
 /**
  * @method attributeChangedCallback
- * @param {String} attr
- * @param {String} _
- * @param {String} value
  * @return {void}
  */
-prototype.attributeChangedCallback = function attributeChangedCallback(attr, _, value) {
+prototype.attributeChangedCallback = function attributeChangedCallback() {
 
     const meta = metaDataFor(this);
 
