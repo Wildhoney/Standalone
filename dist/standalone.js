@@ -147,15 +147,16 @@ module.exports =
 
 	  /**
 	   * @method dataAttributes
+	   * @param {Object} attributes
 	   * @param {String} key
 	   * @return {Boolean}
 	   */
-	  var dataAttributes = function dataAttributes(key) {
-	    return (/data-/.test(element.attributes[key].nodeName)
+	  var dataAttributes = (0, _ramda.curry)(function (attributes, key) {
+	    return (/data-/.test(attributes[key].nodeName)
 	    );
-	  };
+	  });
 
-	  var attributes = validator(keys.filter(dataAttributes).reduce(function (accumulator, key) {
+	  var attributes = validator(keys.filter(dataAttributes(element.attributes)).reduce(function (accumulator, key) {
 
 	    // Reduce the NodeList into a standard object for passing into the React component.
 	    var attribute = element.attributes[key];
@@ -178,12 +179,9 @@ module.exports =
 
 	/**
 	 * @method attributeChangedCallback
-	 * @param {String} attr
-	 * @param {String} _
-	 * @param {String} value
 	 * @return {void}
 	 */
-	prototype.attributeChangedCallback = function attributeChangedCallback(attr, _, value) {
+	prototype.attributeChangedCallback = function attributeChangedCallback() {
 
 	  var meta = metaDataFor(this);
 
