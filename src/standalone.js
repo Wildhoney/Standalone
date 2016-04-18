@@ -64,8 +64,18 @@ const renderComponent = (Component, element, schema) => {
 
     const validator = schema ? osom(schema) : x => x;
     const parseNodeName = compose(camelize, removePrefix);
+    const keys = Object.keys(element.attributes);
 
-    const attributes = validator(Object.keys(element.attributes).reduce((accumulator, key) => {
+    /**
+     * @method dataAttributes
+     * @param {String} key
+     * @return {Boolean}
+     */
+    const dataAttributes = key => {
+        return /data-/.test(element.attributes[key].nodeName);
+    };
+
+    const attributes = validator(keys.filter(dataAttributes).reduce((accumulator, key) => {
 
         // Reduce the NodeList into a standard object for passing into the React component.
         const attribute = element.attributes[key];

@@ -26,3 +26,18 @@ test('should be able to create a component with attributes;', t => {
     });
 
 });
+
+test('should only take the "data-" attributes;', t => {
+
+    const element = document.createElement('mars-weather');
+    element.setAttribute('data-unit', 'F');
+    element.setAttribute('unit', 'C');
+    document.body.appendChild(element);
+
+    return waitFor(element).then(() => {
+        const html = element.innerHTML;
+        const matches = html.match(/<!-- react-text: 11 -->(.+?)<!-- \/react-text -->/i);
+        t.is(matches[1], 'F');
+    });
+
+});
