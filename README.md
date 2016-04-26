@@ -123,19 +123,22 @@ Attaching a JSON string to your element's `data-payload` attribute will cause it
 
 ## Element Methods
 
-All `Standalone` components extend `HTMLElement.prototype` and allow for adding custom functions to the element &mdash; which you can invoke once you have a reference to the associated element &mdash; take a look at [`mars-weather`'s methods](https://github.com/Wildhoney/Standalone/blob/master/example/packages/mars-weather/methods.js) for an example.
+All `Standalone` components extend `HTMLElement.prototype` and allow for adding custom functions to the element &mdash; which you can invoke once you have a reference to the associated element. Take a look at [`mars-weather`'s methods](https://github.com/Wildhoney/Standalone/blob/master/example/packages/mars-weather/methods.js) for an example.
 
 ```javascript
-const example = function() {
-    console.log(`We have a reference to the component: ${this.component}`);
+const getWeather = function() {
+    const weather = this.component.state.weather.atmoOpacity.toLowerCase();
+    return `The current weather on Mars is ${weather}!`;
 };
 
 // ...
 
-document.querySelector('mars-weather').example();
+document.querySelector('mars-weather').getWeather();
 ```
 
-Unless you use the ES2015 arrow function syntax, you will have access to the element using `this`. Once a component has been appended to the DOM it will update its `HTMLElement` prototype to assign the rendered component to `getPrototypeOf(this).component` &mdash; this conveniently allows you to access the `props` and `state` on the component, and invoke functions internal to the React component.
+When a component has been appended to the DOM it will update its `HTMLElement` prototype to assign the rendered component to `getPrototypeOf(this).component` &mdash; this conveniently allows you to access the `props` and `state`, and invoke functions internal to the React component.
+
+It's worth noting that `this.component` will **only** be available once the component has been appended to the DOM.
 
 ## Browser Support
 

@@ -18,12 +18,6 @@ const components = {};
 const metaData = new WeakMap();
 
 /**
- * @constant prototype
- * @type {Object}
- */
-const prototype = Object.create(window.HTMLElement.prototype);
-
-/**
  * @method removePrefix
  * @param {String} attr
  * @return {String}
@@ -58,7 +52,7 @@ const metaDataFor = element => metaData.get(element);
  * @param {Function} Component
  * @param {HTMLElement} element
  * @param {Object} [schema]
- * @return {void}
+ * @return {Object}
  */
 const renderComponent = (Component, element, schema) => {
 
@@ -84,71 +78,98 @@ const renderComponent = (Component, element, schema) => {
 
     }, {}));
 
-    render(<Component {...attributes} />, element);
+    return render(<Component {...attributes} />, element);
 
 };
 
 /**
- * @method createdCallback
- * @return {void}
+ * @method getPrototype
+ * @param {Object} [methods]
+ * @return {Object}
  */
-prototype.createdCallback = function createdCallback() {
+const getPrototype = (methods = {}) => {
 
-    metaData.set(this, {
-        isMounted: false
-    });
+    /**
+     * @constant prototype
+     * @type {Object}
+     */
+    const prototype = Object.create(window.HTMLElement.prototype);
 
-};
+    /**
+     * @method createdCallback
+     * @return {void}
+     */
+    prototype.createdCallback = function createdCallback() {
 
-/**
- * @method attributeChangedCallback
- * @return {void}
- */
-prototype.attributeChangedCallback = function attributeChangedCallback() {
+        metaData.set(this, {
+            isMounted: false
+        });
 
-    const meta = metaDataFor(this);
+        Object.getPrototypeOf(this).component = null;
 
-    if (meta.isMounted) {
+    };
 
-        // Re-render element only if it's currently mounted.
+    /**
+     * @method attributeChangedCallback
+     * @return {void}
+     */
+    prototype.attributeChangedCallback = function attributeChangedCallback() {
+
+        const meta = metaDataFor(this);
+
+        if (meta.isMounted) {
+
+            // Re-render element only if it's currently mounted.
+            const tag = tagName(this.nodeName);
+            const { component, schema } = components[tag];
+            Object.getPrototypeOf(this).component = renderComponent(component, this, schema);
+
+        }
+
+    };
+
+    /**
+     * @method attachedCallback
+     * @return {void}
+     */
+    prototype.attachedCallback = function attachedCallback() {
+
         const tag = tagName(this.nodeName);
+        const meta = metaDataFor(this);
+
+        // Element has been attached to the DOM, so we'll update the meta data, and
+        // then render the element into the custom element container.
+        metaData.set(this, { ...meta, isMounted: true });
         const { component, schema } = components[tag];
-        renderComponent(component, this, schema);
+        Object.getPrototypeOf(this).component = renderComponent(component, this, schema);
 
-    }
+    };
 
-};
+    /**
+     * @method detachedCallback
+     * @return {void}
+     */
+    prototype.detachedCallback = function detachedCallback() {
 
-/**
- * @method attachedCallback
- * @return {void}
- */
-prototype.attachedCallback = function attachedCallback() {
+        metaData.set(this, {
+            isMounted: false
+        });
 
-    const tag = tagName(this.nodeName);
-    const meta = metaDataFor(this);
+        // Instruct the component to unmount, which will invoke the `componentWillUnmount` lifecycle
+        // function for handling any cleaning up of the component.
+        unmountComponentAtNode(this);
+        Object.getPrototypeOf(this).component = null;
 
-    // Element has been attached to the DOM, so we'll update the meta data, and
-    // then render the element into the custom element container.
-    metaData.set(this, { ...meta, isMounted: true });
-    const { component, schema } = components[tag];
-    renderComponent(component, this, schema);
+    };
 
-};
+    Object.keys(methods).forEach(key => {
 
-/**
- * @method detachedCallback
- * @return {void}
- */
-prototype.detachedCallback = function detachedCallback() {
+        // Apply the user-defined functions onto the prototype.
+        prototype[key] = prototype[key] || methods[key];
 
-    metaData.set(this, {
-        isMounted: false
     });
 
-    // Instruct the component to unmount, which will invoke the `componentWillUnmount` lifecycle
-    // function for handling any cleaning up of the component.
-    unmountComponentAtNode(this);
+    return prototype;
 
 };
 
@@ -156,13 +177,14 @@ prototype.detachedCallback = function detachedCallback() {
  * @method make
  * @param {String} tag
  * @param {Object} schema
+ * @param {Object} methods
  * @param {Object} component
  * @return {Object|void}
  */
-export const make = (tag, { schema, component }) => {
+export const make = (tag, { schema, methods, component }) => {
 
     try {
-        document.registerElement(tagName(tag), { prototype });
+        document.registerElement(tagName(tag), { prototype: getPrototype(methods) });
         components[tagName(tag)] = { component, schema };
     } catch (e) {
         return void throwError(e.message);

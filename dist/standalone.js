@@ -48,7 +48,7 @@ module.exports =
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	    value: true
 	});
 	exports.make = undefined;
 
@@ -89,18 +89,12 @@ module.exports =
 	var metaData = new _es6WeakMap2.default();
 
 	/**
-	 * @constant prototype
-	 * @type {Object}
-	 */
-	var prototype = Object.create(window.HTMLElement.prototype);
-
-	/**
 	 * @method removePrefix
 	 * @param {String} attr
 	 * @return {String}
 	 */
 	var removePrefix = (0, _ramda.memoize)(function (attr) {
-	  return attr.replace('data-', '');
+	    return attr.replace('data-', '');
 	});
 
 	/**
@@ -109,7 +103,7 @@ module.exports =
 	 * @return {String}
 	 */
 	var tagName = (0, _ramda.memoize)(function (nodeName) {
-	  return nodeName.toLowerCase();
+	    return nodeName.toLowerCase();
 	});
 
 	/**
@@ -118,7 +112,7 @@ module.exports =
 	 * @return {void}
 	 */
 	var throwError = function throwError(message) {
-	  throw 'Standalone: ' + message + '.';
+	    throw 'Standalone: ' + message + '.';
 	};
 
 	/**
@@ -127,7 +121,7 @@ module.exports =
 	 * @return {Object}
 	 */
 	var metaDataFor = function metaDataFor(element) {
-	  return metaData.get(element);
+	    return metaData.get(element);
 	};
 
 	/**
@@ -135,122 +129,148 @@ module.exports =
 	 * @param {Function} Component
 	 * @param {HTMLElement} element
 	 * @param {Object} [schema]
-	 * @return {void}
+	 * @return {Object}
 	 */
 	var renderComponent = function renderComponent(Component, element, schema) {
 
-	  var validator = schema ? (0, _osom2.default)(schema) : function (x) {
-	    return x;
-	  };
-	  var parseNodeName = (0, _ramda.compose)(_humps.camelize, removePrefix);
-	  var keys = Object.keys(element.attributes);
+	    var validator = schema ? (0, _osom2.default)(schema) : function (x) {
+	        return x;
+	    };
+	    var parseNodeName = (0, _ramda.compose)(_humps.camelize, removePrefix);
+	    var keys = Object.keys(element.attributes);
 
-	  /**
-	   * @method dataAttributes
-	   * @param {Object} attributes
-	   * @param {String} key
-	   * @return {Boolean}
-	   */
-	  var dataAttributes = (0, _ramda.curry)(function (attributes, key) {
-	    return (/data-/.test(attributes[key].nodeName)
-	    );
-	  });
+	    /**
+	     * @method dataAttributes
+	     * @param {Object} attributes
+	     * @param {String} key
+	     * @return {Boolean}
+	     */
+	    var dataAttributes = (0, _ramda.curry)(function (attributes, key) {
+	        return (/data-/.test(attributes[key].nodeName)
+	        );
+	    });
 
-	  var attributes = validator(keys.filter(dataAttributes(element.attributes)).reduce(function (accumulator, key) {
+	    var attributes = validator(keys.filter(dataAttributes(element.attributes)).reduce(function (accumulator, key) {
 
-	    // Reduce the NodeList into a standard object for passing into the React component.
-	    var attribute = element.attributes[key];
-	    return _extends({}, accumulator, _defineProperty({}, parseNodeName(attribute.nodeName), attribute.nodeValue));
-	  }, {}));
+	        // Reduce the NodeList into a standard object for passing into the React component.
+	        var attribute = element.attributes[key];
+	        return _extends({}, accumulator, _defineProperty({}, parseNodeName(attribute.nodeName), attribute.nodeValue));
+	    }, {}));
 
-	  (0, _reactDom.render)(_react2.default.createElement(Component, attributes), element);
+	    return (0, _reactDom.render)(_react2.default.createElement(Component, attributes), element);
 	};
 
 	/**
-	 * @method createdCallback
-	 * @return {void}
+	 * @method getPrototype
+	 * @param {Object} [methods]
+	 * @return {Object}
 	 */
-	prototype.createdCallback = function createdCallback() {
+	var getPrototype = function getPrototype() {
+	    var methods = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
-	  metaData.set(this, {
-	    isMounted: false
-	  });
-	};
 
-	/**
-	 * @method attributeChangedCallback
-	 * @return {void}
-	 */
-	prototype.attributeChangedCallback = function attributeChangedCallback() {
+	    /**
+	     * @constant prototype
+	     * @type {Object}
+	     */
+	    var prototype = Object.create(window.HTMLElement.prototype);
 
-	  var meta = metaDataFor(this);
+	    /**
+	     * @method createdCallback
+	     * @return {void}
+	     */
+	    prototype.createdCallback = function createdCallback() {
 
-	  if (meta.isMounted) {
+	        metaData.set(this, {
+	            isMounted: false
+	        });
+	    };
 
-	    // Re-render element only if it's currently mounted.
-	    var tag = tagName(this.nodeName);
-	    var _components$tag = components[tag];
-	    var component = _components$tag.component;
-	    var schema = _components$tag.schema;
+	    /**
+	     * @method attributeChangedCallback
+	     * @return {void}
+	     */
+	    prototype.attributeChangedCallback = function attributeChangedCallback() {
 
-	    renderComponent(component, this, schema);
-	  }
-	};
+	        var meta = metaDataFor(this);
 
-	/**
-	 * @method attachedCallback
-	 * @return {void}
-	 */
-	prototype.attachedCallback = function attachedCallback() {
+	        if (meta.isMounted) {
 
-	  var tag = tagName(this.nodeName);
-	  var meta = metaDataFor(this);
+	            // Re-render element only if it's currently mounted.
+	            var tag = tagName(this.nodeName);
+	            var _components$tag = components[tag];
+	            var component = _components$tag.component;
+	            var schema = _components$tag.schema;
 
-	  // Element has been attached to the DOM, so we'll update the meta data, and
-	  // then render the element into the custom element container.
-	  metaData.set(this, _extends({}, meta, { isMounted: true }));
-	  var _components$tag2 = components[tag];
-	  var component = _components$tag2.component;
-	  var schema = _components$tag2.schema;
+	            Object.getPrototypeOf(this).component = renderComponent(component, this, schema);
+	        }
+	    };
 
-	  renderComponent(component, this, schema);
-	};
+	    /**
+	     * @method attachedCallback
+	     * @return {void}
+	     */
+	    prototype.attachedCallback = function attachedCallback() {
 
-	/**
-	 * @method detachedCallback
-	 * @return {void}
-	 */
-	prototype.detachedCallback = function detachedCallback() {
+	        var tag = tagName(this.nodeName);
+	        var meta = metaDataFor(this);
 
-	  metaData.set(this, {
-	    isMounted: false
-	  });
+	        // Element has been attached to the DOM, so we'll update the meta data, and
+	        // then render the element into the custom element container.
+	        metaData.set(this, _extends({}, meta, { isMounted: true }));
+	        var _components$tag2 = components[tag];
+	        var component = _components$tag2.component;
+	        var schema = _components$tag2.schema;
 
-	  // Instruct the component to unmount, which will invoke the `componentWillUnmount` lifecycle
-	  // function for handling any cleaning up of the component.
-	  (0, _reactDom.unmountComponentAtNode)(this);
+	        Object.getPrototypeOf(this).component = renderComponent(component, this, schema);
+	    };
+
+	    /**
+	     * @method detachedCallback
+	     * @return {void}
+	     */
+	    prototype.detachedCallback = function detachedCallback() {
+
+	        metaData.set(this, {
+	            isMounted: false
+	        });
+
+	        // Instruct the component to unmount, which will invoke the `componentWillUnmount` lifecycle
+	        // function for handling any cleaning up of the component.
+	        (0, _reactDom.unmountComponentAtNode)(this);
+	    };
+
+	    Object.keys(methods).forEach(function (key) {
+
+	        // Apply the user-defined functions onto the prototype.
+	        prototype[key] = prototype[key] || methods[key];
+	    });
+
+	    return prototype;
 	};
 
 	/**
 	 * @method make
 	 * @param {String} tag
 	 * @param {Object} schema
+	 * @param {Object} methods
 	 * @param {Object} component
 	 * @return {Object|void}
 	 */
 	var make = exports.make = function make(tag, _ref) {
-	  var schema = _ref.schema;
-	  var component = _ref.component;
+	    var schema = _ref.schema;
+	    var methods = _ref.methods;
+	    var component = _ref.component;
 
 
-	  try {
-	    document.registerElement(tagName(tag), { prototype: prototype });
-	    components[tagName(tag)] = { component: component, schema: schema };
-	  } catch (e) {
-	    return void throwError(e.message);
-	  }
+	    try {
+	        document.registerElement(tagName(tag), { prototype: getPrototype(methods) });
+	        components[tagName(tag)] = { component: component, schema: schema };
+	    } catch (e) {
+	        return void throwError(e.message);
+	    }
 
-	  return component;
+	    return component;
 	};
 
 /***/ },
