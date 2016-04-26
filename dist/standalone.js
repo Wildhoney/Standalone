@@ -184,6 +184,8 @@ module.exports =
 	        metaData.set(this, {
 	            isMounted: false
 	        });
+
+	        Object.getPrototypeOf(this).component = null;
 	    };
 
 	    /**
@@ -238,6 +240,7 @@ module.exports =
 	        // Instruct the component to unmount, which will invoke the `componentWillUnmount` lifecycle
 	        // function for handling any cleaning up of the component.
 	        (0, _reactDom.unmountComponentAtNode)(this);
+	        Object.getPrototypeOf(this).component = null;
 	    };
 
 	    Object.keys(methods).forEach(function (key) {
