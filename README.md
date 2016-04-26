@@ -17,6 +17,7 @@
     * [Specifying a Schema](#specifying-a-schema)
 * [Component Events](#component-events)
     * [Passing JSON Structure](#passing-json-structure)
+* [Element Methods](#element-methods)
 * [Browser Support](#browser-support)
     
 ---
@@ -119,6 +120,22 @@ export default {
 ```
 
 Attaching a JSON string to your element's `data-payload` attribute will cause it to be parsed into an object using `JSON.parse`, and passed to your React component as `this.props.payload` which can be defined in the `propTypes` using `PropTypes.shape`.
+
+## Element Methods
+
+All `Standalone` components extend `HTMLElement.prototype` and allow for adding custom functions to the element &mdash; which you can invoke once you have a reference to the associated element &mdash; take a look at [`mars-weather`'s methods](https://github.com/Wildhoney/Standalone/blob/master/example/packages/mars-weather/methods.js) for an example.
+
+```javascript
+const example = function() {
+    console.log(`We have a reference to the component: ${this.component}`);
+};
+
+// ...
+
+document.querySelector('mars-weather').example();
+```
+
+Unless you use the ES2015 arrow function syntax, you will have access to the element using `this`. Once a component has been appended to the DOM it will update its `HTMLElement` prototype to assign the rendered component to `getPrototypeOf(this).component` &mdash; this conveniently allows you to access the `props` and `state` on the component, and invoke functions internal to the React component.
 
 ## Browser Support
 
