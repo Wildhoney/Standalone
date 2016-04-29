@@ -28,11 +28,11 @@
 Take a look at the [`mars-weather` component](example/packages/mars-weather) for an idea on how to structure your reusable component &ndash; however essentially a *component* consists of a tag name &mdash; such as `mars-weather`, the React `component` and an [optional schema](#specifying-a-schema) using [`osom`](https://github.com/Kikobeats/osom).
 
 ```javascript
-import { make } from 'standalone';
+import { createModule } from 'standalone';
 import schema from './schema';
 import component from './component';
 
-export default make('mars-weather', { schema, component });
+export default createModule('mars-weather', { schema, component });
 
 ```
 
@@ -147,10 +147,10 @@ With the Custom Elements API it is possible to extend existing elements &ndash; 
 
 ```javascript
 // Creates a `mars-weather` element.
-export default make('mars-weather', { schema, methods, component });
+export default createModule('mars-weather', { schema, methods, component });
 
 // Creates a `input[is="mars-weather"]` element.
-export default make('input/mars-weather', { schema, methods, component });
+export default createModule('input/mars-weather', { schema, methods, component });
 ```
 
 It's worth noting that when you extend a known element, your element will extend its prototype &ndash; in the case above the `mars-weather` element will extend `input` and its `HTMLInputElement` prototype.

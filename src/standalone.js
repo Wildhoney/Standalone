@@ -72,8 +72,8 @@ const renderComponent = (Component, element, schema) => {
 const getPrototype = ({ inherits, schema, methods, component }) => {
 
     const prototypeFrom = Object.getPrototypeOf(document.createElement(inherits));
-    const isUnknownElement = prototypeFrom === HTMLUnknownElement.prototype;
-    const prototype = Object.create(isUnknownElement ? HTMLElement.prototype : prototypeFrom);
+    const isUnknownElement = prototypeFrom === window.HTMLUnknownElement.prototype;
+    const prototype = Object.create(isUnknownElement ? window.HTMLElement.prototype : prototypeFrom);
 
     /**
      * @method createdCallback
@@ -140,7 +140,7 @@ const getPrototype = ({ inherits, schema, methods, component }) => {
 };
 
 /**
- * @method make
+ * @method createModule
  * @param {String} reference
  * @param {Object} schema
  * @param {Object} methods
@@ -148,6 +148,19 @@ const getPrototype = ({ inherits, schema, methods, component }) => {
  * @return {Object|void}
  */
 export const make = (reference, { schema, methods, component }) => {
+    console.warn('Standalone: `make` function has been deprecated in favour of more explicit `createModule`.');
+    return createModule(reference, { schema, methods, component });
+};
+
+/**
+ * @method createModule
+ * @param {String} reference
+ * @param {Object} schema
+ * @param {Object} methods
+ * @param {Object} component
+ * @return {Object|void}
+ */
+export const createModule = (reference, { schema, methods, component }) => {
 
     const [name, inherits] = (() => {
         const regExp = /^(.+?)(?:\/(.+?))?$/i;
