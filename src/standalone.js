@@ -1,21 +1,14 @@
-import React, { createElement } from 'react';
+import React from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
-import WeakMap from 'es6-weak-map';
-import { memoize, compose, curry } from 'ramda';
+import { memoize, compose, curry, pickBy, complement, isNil } from 'ramda';
 import osom from 'osom';
 import { camelize } from 'humps';
 
 /**
- * @constant components
- * @type {Object}
- */
-const components = {};
-
-/**
  * @constant metaData
- * @type {WeakMap}
+ * @type {Symbol}
  */
-const metaData = new WeakMap();
+const metaData = Symbol('standalone/meta-data');
 
 /**
  * @method removePrefix
@@ -25,13 +18,6 @@ const metaData = new WeakMap();
 const removePrefix = memoize(attr => attr.replace('data-', ''));
 
 /**
- * @method tagName
- * @param {String} nodeName
- * @return {String}
- */
-const tagName = memoize(nodeName => nodeName.toLowerCase());
-
-/**
  * @method throwError
  * @param {String} message
  * @return {void}
@@ -39,13 +25,6 @@ const tagName = memoize(nodeName => nodeName.toLowerCase());
 const throwError = message => {
     throw `Standalone: ${message}.`;
 };
-
-/**
- * @method metaDataFor
- * @param {HTMLElement} element
- * @return {Object}
- */
-const metaDataFor = element => metaData.get(element);
 
 /**
  * @method renderComponent
@@ -84,29 +63,24 @@ const renderComponent = (Component, element, schema) => {
 
 /**
  * @method getPrototype
- * @param {Object} [methods]
+ * @param {String} inherits
+ * @param {Object} schema
+ * @param {Object} methods
+ * @param {Object} component
  * @return {Object}
  */
-const getPrototype = (methods = {}) => {
+const getPrototype = ({ inherits, schema, methods, component }) => {
 
-    /**
-     * @constant prototype
-     * @type {Object}
-     */
-    const prototype = Object.create(window.HTMLElement.prototype);
+    const prototypeFrom = Object.getPrototypeOf(document.createElement(inherits));
+    const isUnknownElement = prototypeFrom === HTMLUnknownElement.prototype;
+    const prototype = Object.create(isUnknownElement ? HTMLElement.prototype : prototypeFrom);
 
     /**
      * @method createdCallback
      * @return {void}
      */
     prototype.createdCallback = function createdCallback() {
-
-        metaData.set(this, {
-            isMounted: false
-        });
-
-        Object.getPrototypeOf(this).component = null;
-
+        this.component = null;
     };
 
     /**
@@ -115,14 +89,11 @@ const getPrototype = (methods = {}) => {
      */
     prototype.attributeChangedCallback = function attributeChangedCallback() {
 
-        const meta = metaDataFor(this);
-
-        if (meta.isMounted) {
+        if (this[metaData].component) {
 
             // Re-render element only if it's currently mounted.
-            const tag = tagName(this.nodeName);
-            const { component, schema } = components[tag];
-            Object.getPrototypeOf(this).component = renderComponent(component, this, schema);
+            const { component, schema } = this[metaData];
+            this.component = renderComponent(component, this, schema);
 
         }
 
@@ -134,14 +105,10 @@ const getPrototype = (methods = {}) => {
      */
     prototype.attachedCallback = function attachedCallback() {
 
-        const tag = tagName(this.nodeName);
-        const meta = metaDataFor(this);
-
         // Element has been attached to the DOM, so we'll update the meta data, and
         // then render the element into the custom element container.
-        metaData.set(this, { ...meta, isMounted: true });
-        const { component, schema } = components[tag];
-        Object.getPrototypeOf(this).component = renderComponent(component, this, schema);
+        const { component, schema } = this[metaData];
+        this.component = renderComponent(component, this, schema);
 
     };
 
@@ -151,14 +118,10 @@ const getPrototype = (methods = {}) => {
      */
     prototype.detachedCallback = function detachedCallback() {
 
-        metaData.set(this, {
-            isMounted: false
-        });
-
         // Instruct the component to unmount, which will invoke the `componentWillUnmount` lifecycle
         // function for handling any cleaning up of the component.
         unmountComponentAtNode(this);
-        Object.getPrototypeOf(this).component = null;
+        this.component = null;
 
     };
 
@@ -169,27 +132,38 @@ const getPrototype = (methods = {}) => {
 
     });
 
+    // Register the metadata used by Standalone.
+    prototype[metaData] = { methods, schema, component };
+
     return prototype;
 
 };
 
 /**
  * @method make
- * @param {String} tag
+ * @param {String} reference
  * @param {Object} schema
  * @param {Object} methods
  * @param {Object} component
  * @return {Object|void}
  */
-export const make = (tag, { schema, methods, component }) => {
+export const make = (reference, { schema, methods, component }) => {
+
+    const [name, inherits] = (() => {
+        const regExp = /^(.+?)(?:\/(.+?))?$/i;
+        const matches = reference.match(regExp);
+        return [matches[2] || matches[1], matches[2] ? matches[1] : undefined];
+    })();
 
     try {
-        document.registerElement(tagName(tag), { prototype: getPrototype(methods) });
-        components[tagName(tag)] = { component, schema };
+
+        return document.registerElement(name, pickBy(complement(isNil), {
+            prototype: getPrototype({ inherits, schema, methods, component }),
+            extends: inherits
+        }));
+
     } catch (e) {
         return void throwError(e.message);
     }
-
-    return component;
 
 };
