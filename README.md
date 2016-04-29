@@ -18,6 +18,7 @@
 * [Component Events](#component-events)
     * [Passing JSON Structure](#passing-json-structure)
 * [Element Methods](#element-methods)
+* [Extending Elements](#extending-elements)
 * [Browser Support](#browser-support)
     
 ---
@@ -139,6 +140,20 @@ document.querySelector('mars-weather').getWeather();
 When a component has been appended to the DOM it will update its `HTMLElement` prototype to assign the rendered component to `getPrototypeOf(this).component` &mdash; this conveniently allows you to access the `props` and `state`, and invoke functions internal to the React component.
 
 It's worth noting that `this.component` will **only** be available once the component has been appended to the DOM.
+
+## Extending Elements
+
+With the Custom Elements API it is possible to extend existing elements &ndash; using the `is` attribute to specialise. `Standalone` allows you to extend elements by passing the element to extend.
+
+```javascript
+// Creates a `mars-weather` element.
+export default make('mars-weather', { schema, methods, component });
+
+// Creates a `input[is="mars-weather"]` element.
+export default make('input/mars-weather', { schema, methods, component });
+```
+
+It's worth noting that when you extend a known element, your element will extend its prototype &ndash; in the case above the `mars-weather` element will extend `input` and its `HTMLInputElement` prototype.
 
 ## Browser Support
 
