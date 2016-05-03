@@ -1,6 +1,6 @@
 {
   "name": "react-standalone",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Create framework agnostic components that are truly reusable and interoperable with all the benefits of the React ecosystem – using the HTML5 custom elements API to extend HTML's vocabulary.",
   "main": "dist/standalone.js",
   "scripts": {
