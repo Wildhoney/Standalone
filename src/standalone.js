@@ -125,7 +125,7 @@ const getPrototype = ({ inherits, schema, methods, component }) => {
 
     };
 
-    Object.keys(methods).forEach(key => {
+    typeof methods === 'object' && Object.keys(methods).forEach(key => {
 
         // Apply the user-defined functions onto the prototype.
         prototype[key] = prototype[key] || methods[key];
