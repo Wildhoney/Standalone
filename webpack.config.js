@@ -8,6 +8,12 @@ module.exports = {
         library: 'standalone',
         libraryTarget: 'commonjs2'
     },
+    externals: {
+        'react': true,
+        'react-dom': true,
+        'ramda': true,
+        'osom': true
+    },
     module: {
         loaders: [
             {

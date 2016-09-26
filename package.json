@@ -66,8 +66,7 @@
     "webpack": "^1.12.15"
   },
   "dependencies": {
-    "humps": "^1.0.0",
-    "osom": "^1.1.0",
+    "osom": "^1.1.5",
     "ramda": "^0.21.0",
     "react": "^15.0.1",
     "react-dom": "^15.0.1"
